@@ -24,7 +24,7 @@ var CreateCmd = &cobra.Command{
 	Use:                   "create",
 	Short:                 "Create GitLab repository",
 	DisableFlagsInUseLine: true,
-	Run:                   createRepository,
+	Run:                   createProject,
 }
 
 func init() {
@@ -38,7 +38,7 @@ func init() {
 	CreateCmd.MarkFlagRequired("name")
 }
 
-func createRepository(cmd *cobra.Command, args []string) {
+func createProject(cmd *cobra.Command, args []string) {
 	gitlabToken, _ := cmd.Flags().GetString("gitlabToken")
 	gitlabUrl, _ := cmd.Flags().GetString("gitlabUrl")
 
