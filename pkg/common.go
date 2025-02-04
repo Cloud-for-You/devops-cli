@@ -41,3 +41,7 @@ func CompareMembers(gitlabMembers, sourceMembers []Member) (missing, extra []Mem
 
 	return missing, extra
 }
+
+func Ptr(s string) *string {
+	return &s
+}
