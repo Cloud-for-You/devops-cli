@@ -38,7 +38,7 @@ var rootCmd = &cobra.Command{
 }
 
 var docCmd = &cobra.Command{
-	Use:   "gendoc",
+	Use:   "docs",
 	Short: "Generates documentation for CLI commands",
 	Hidden: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
