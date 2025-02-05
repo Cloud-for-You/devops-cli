@@ -47,6 +47,26 @@ func CreateProject(client *gitlab.Client, projectName string, namespaceID int, p
 		Visibility:  gitlab.Ptr(gitlab.VisibilityValue(visibility)),
 	}
 
+	/*
+	maintainerGroup, res, err := CreateGroup(client, *maintainerGroupName, "", "private")
+	if err != nil {
+		if res != nil && res.StatusCode == http.StatusConflict {
+			fmt.Printf("Group '%s' is exists.\n", *maintainerGroupName)
+		} else {
+			fmt.Printf("Failed to create GitLab group '%s': %v\n", *maintainerGroupName, err)
+		}
+	}
+
+	developerGroup, res, err := CreateGroup(client, *developerGroupName, "", "private")
+	if err != nil {
+		if res != nil && res.StatusCode == http.StatusConflict {
+			fmt.Printf("Group '%s' is exists.\n", *developerGroupName)
+		} else {
+			fmt.Printf("Failed to create GitLab group '%s': %v\n", *developerGroupName, err)
+		}
+	}
+	*/
+
 	project, res, err := client.Projects.CreateProject(projectOptions)
 	if err != nil {
 		log.Fatalf("Failed to create GitLab repository: %v", err)
