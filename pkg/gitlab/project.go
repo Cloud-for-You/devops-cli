@@ -3,6 +3,7 @@ package gitlab
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
@@ -39,21 +40,20 @@ func ListProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 
 func CreateProject(client *gitlab.Client, projectName string, namespaceID int, projectDescription string, visibility string, maintainerGroupName *string, developerGroupName *string) (*gitlab.Project, *gitlab.Response, error) {
 
-  projectOptions := &gitlab.CreateProjectOptions{
-	  Name:        gitlab.Ptr(projectName),
+	projectOptions := &gitlab.CreateProjectOptions{
+		Name:        gitlab.Ptr(projectName),
 		Path:        gitlab.Ptr(projectName),
 		Description: gitlab.Ptr(projectDescription),
 		NamespaceID: gitlab.Ptr(namespaceID),
 		Visibility:  gitlab.Ptr(gitlab.VisibilityValue(visibility)),
 	}
 
-	/*
 	maintainerGroup, res, err := CreateGroup(client, *maintainerGroupName, "", "private")
 	if err != nil {
 		if res != nil && res.StatusCode == http.StatusConflict {
 			fmt.Printf("Group '%s' is exists.\n", *maintainerGroupName)
 		} else {
-			fmt.Printf("Failed to create GitLab group '%s': %v\n", *maintainerGroupName, err)
+			log.Fatalf("Failed to create GitLab group '%s': %v\n", *maintainerGroupName, err)
 		}
 	}
 
@@ -62,14 +62,27 @@ func CreateProject(client *gitlab.Client, projectName string, namespaceID int, p
 		if res != nil && res.StatusCode == http.StatusConflict {
 			fmt.Printf("Group '%s' is exists.\n", *developerGroupName)
 		} else {
-			fmt.Printf("Failed to create GitLab group '%s': %v\n", *developerGroupName, err)
+			log.Fatalf("Failed to create GitLab group '%s': %v\n", *developerGroupName, err)
 		}
 	}
-	*/
+
+	fmt.Println(maintainerGroup.Name)
+	fmt.Println(developerGroup.Name)
 
 	project, res, err := client.Projects.CreateProject(projectOptions)
 	if err != nil {
 		log.Fatalf("Failed to create GitLab repository: %v", err)
+	}
+
+	// Invite groups to project
+	err = InviteGroupToProject(client, project.ID, maintainerGroup.ID, gitlab.Ptr(gitlab.MaintainerPermissions))
+	if err != nil {
+		log.Fatalf("Failed to invite maintainer group to project: %v", err)
+	}
+
+	err = InviteGroupToProject(client, project.ID, developerGroup.ID, gitlab.Ptr(gitlab.DeveloperPermissions))
+	if err != nil {
+		log.Fatalf("Failed to invite developer group to project: %v", err)
 	}
 
 	return project, res, nil

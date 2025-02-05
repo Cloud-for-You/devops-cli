@@ -92,6 +92,24 @@ func CreateGroup(client *gitlab.Client, groupName string, groupDescription strin
 	return group, res, nil
 }
 
+// InviteGroupToProject invite existing group to existing project
+func InviteGroupToProject(client *gitlab.Client, projectID int, groupID int, accessLevel *gitlab.AccessLevelValue) error {
+	_, err := client.Projects.ShareProjectWithGroup(
+		projectID,
+		&gitlab.ShareWithGroupOptions{
+			GroupID:     gitlab.Ptr(groupID),
+			GroupAccess: accessLevel,
+		},
+		nil,
+	)
+	if err != nil {
+		return fmt.Errorf("failed invite group to project")
+	}
+
+	fmt.Printf("Group successfully invite to the project.\n")
+	return nil
+}
+
 // AddUserToGroup adds a user to a group
 func AddMemberToGroup(client *gitlab.Client, groupname string, username string, accessLevel *gitlab.AccessLevelValue) error {
 	// V pripade, ze nepredavame accessLevel, vyresime jeho nastaveni pres jmeno skupiny, ktera musi jmeno obsahovat
@@ -114,9 +132,11 @@ func AddMemberToGroup(client *gitlab.Client, groupname string, username string, 
 	}
 
 	// Na zaklade jmena skupiny ziskame jeji ID
-	groups, _, err := client.Groups.ListGroups(&gitlab.ListGroupsOptions{
-		Search: &groupname,
-	})
+	groups, _, err := client.Groups.ListGroups(
+		&gitlab.ListGroupsOptions{
+			Search: &groupname,
+		},
+	)
 	if err != nil {
 		return fmt.Errorf("error retrieving group: %w", err)
 	}
