@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/cobra/doc"
 	"github.com/spf13/viper"
 
 	gitlab "github.com/Cloud-for-You/devops-cli/cmd/gitlab"
@@ -20,6 +21,7 @@ var (
 	Command    string
 	Flags      map[string]string
 )
+
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -35,9 +37,28 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+var docCmd = &cobra.Command{
+	Use:   "gendoc",
+	Short: "Generates documentation for CLI commands",
+	Hidden: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		docsDir := "./docs"
+		if err := os.MkdirAll(docsDir, 0755); err != nil {
+			return err
+		}
+		err := doc.GenMarkdownTree(rootCmd, docsDir)
+		if err != nil {
+			return err
+		}
+		fmt.Println("Documentation generated in", docsDir)
+		return nil
+	},
+}
+
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	rootCmd.AddCommand(docCmd)
 	rootCmd.AddCommand(gitlab.GitlabCmd)
 
 	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "d", false, "Display debugging output in the console. (default: false)")
