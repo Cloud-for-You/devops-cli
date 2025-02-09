@@ -11,12 +11,13 @@ import (
 )
 
 var (
-	projectName        string
-	projectDescription string
-	namespaceID        int
-	visibility         string
+	projectName         string
+	projectDescription  string
+	namespaceID         int
+	visibility          string
 	maintainerGroupName string
-  developerGroupName string	
+  developerGroupName  string	
+	importURL					  string
 )
 
 // Create GitLab repository
@@ -34,6 +35,7 @@ func init() {
 	CreateCmd.Flags().StringVar(&visibility, "visibility", "private", "Visibility of the repository (private, internal, public)")
 	CreateCmd.Flags().StringVar(&maintainerGroupName, "maintainerGroup", "", "Group containing maintainers")
 	CreateCmd.Flags().StringVar(&developerGroupName, "developerGroup", "", "Group containing developers")
+	CreateCmd.Flags().StringVar(&importURL, "importURL", "", "URL of the repository to import")
 
 	CreateCmd.MarkFlagRequired("name")
 }
@@ -51,7 +53,16 @@ func createProject(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to create GitLab client: %v", err)
 	}
 
-	result, res, err := gitlab.CreateProject(client, projectName, namespaceID, projectDescription, visibility, &maintainerGroupName, &developerGroupName) 
+	result, res, err := gitlab.CreateProject(
+		client,
+		projectName,
+		namespaceID,
+		projectDescription,
+		visibility,
+		&maintainerGroupName,
+		&developerGroupName,
+		&importURL,
+	) 
 	if err != nil {
 		if res != nil && res.StatusCode == http.StatusConflict {
 			fmt.Printf("Project '%s' is exists.\n", projectName)
