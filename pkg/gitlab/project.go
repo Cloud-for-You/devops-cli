@@ -38,16 +38,32 @@ func ListProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 	return allProjects, nil
 }
 
-func CreateProject(client *gitlab.Client, projectName string, namespaceID int, projectDescription string, visibility string, maintainerGroupName *string, developerGroupName *string) (*gitlab.Project, *gitlab.Response, error) {
+func CreateProject(
+	client *gitlab.Client,
+	projectName string,
+	namespaceID int,
+	projectDescription string,
+	visibility string,
+	maintainerGroupName *string,
+	developerGroupName *string,
+	importURL *string,
+) (*gitlab.Project, *gitlab.Response, error) {
 
 	projectOptions := &gitlab.CreateProjectOptions{
-		Name:        gitlab.Ptr(projectName),
-		Path:        gitlab.Ptr(projectName),
-		Description: gitlab.Ptr(projectDescription),
-		NamespaceID: gitlab.Ptr(namespaceID),
-		Visibility:  gitlab.Ptr(gitlab.VisibilityValue(visibility)),
+		Name:                 gitlab.Ptr(projectName),
+		Path:                 gitlab.Ptr(projectName),
+		Description:          gitlab.Ptr(projectDescription),
+		NamespaceID:          gitlab.Ptr(namespaceID),
+		Visibility:           gitlab.Ptr(gitlab.VisibilityValue(visibility)),
+		InitializeWithReadme: gitlab.Ptr(true),
 	}
 
+	if importURL != nil && *importURL != "" {
+		projectOptions.InitializeWithReadme = gitlab.Ptr(false)
+		projectOptions.ImportURL = gitlab.Ptr(*importURL)
+	}
+
+  // Create project
 	project, res, err := client.Projects.CreateProject(projectOptions)
 	if err != nil {
 		log.Fatalf("Failed to create GitLab repository: %v", err)
