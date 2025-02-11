@@ -14,7 +14,7 @@ import (
 	groupsync "github.com/Cloud-for-You/devops-cli/cmd/gitlab/groupsync"
 	list "github.com/Cloud-for-You/devops-cli/cmd/gitlab/list"
 	project "github.com/Cloud-for-You/devops-cli/cmd/gitlab/project"
-	gitlab "github.com/Cloud-for-You/devops-cli/pkg/gitlab"
+	pkg "github.com/Cloud-for-You/devops-cli/pkg/gitlab"
 	client "gitlab.com/gitlab-org/api/client-go"
 )
 
@@ -68,7 +68,7 @@ func whoami(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to create GitLab client: %v", err)
 	}
 
-	username, _ := gitlab.Whoami(client)
+	username, _ := pkg.Whoami(client)
 	fmt.Println(*username)
 
 }

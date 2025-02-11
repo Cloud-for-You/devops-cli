@@ -1,0 +1,8 @@
+apiVersion: gitlab-ce.devops-cli.cfy.cz/v1alpha1
+kind: projekt
+metadata:
+  name: test-project
+spec:
+  description: "Testovaci projekt vytvareny pomoci devops-cli a konfiguracniho souboru"
+  namespace_id: 100
+  visibility: public

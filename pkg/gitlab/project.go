@@ -8,6 +8,8 @@ import (
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
+type ProjectSpec = gitlab.CreateProjectOptions
+
 func ListProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 	var allProjects []*gitlab.Project
 	page := 1
@@ -40,15 +42,17 @@ func ListProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 
 func CreateProject(
 	client *gitlab.Client,
-	projectName string,
-	namespaceID int,
-	projectDescription string,
-	visibility string,
+	projectOptions *gitlab.CreateProjectOptions,
+//	projectName string,
+//	namespaceID int,
+//	projectDescription string,
+//	visibility string,
 	maintainerGroupName *string,
 	developerGroupName *string,
-	importURL *string,
+//	importURL *string,
 ) (*gitlab.Project, *gitlab.Response, error) {
 
+/*
 	projectOptions := &gitlab.CreateProjectOptions{
 		Name:                 gitlab.Ptr(projectName),
 		Path:                 gitlab.Ptr(projectName),
@@ -57,10 +61,12 @@ func CreateProject(
 		Visibility:           gitlab.Ptr(gitlab.VisibilityValue(visibility)),
 		InitializeWithReadme: gitlab.Ptr(true),
 	}
+*/
 
-	if importURL != nil && *importURL != "" {
+  projectOptions.InitializeWithReadme = gitlab.Ptr(true)
+
+	if projectOptions.ImportURL != nil {
 		projectOptions.InitializeWithReadme = gitlab.Ptr(false)
-		projectOptions.ImportURL = gitlab.Ptr(*importURL)
 	}
 
   // Create project

@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	gitlab "github.com/Cloud-for-You/devops-cli/pkg/gitlab"
+	pkg "github.com/Cloud-for-You/devops-cli/pkg/gitlab"
 	"github.com/spf13/cobra"
-	client "gitlab.com/gitlab-org/api/client-go"
+	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
 var (
@@ -40,12 +40,12 @@ func createGroup(cmd *cobra.Command, args []string) {
 		log.Fatalf("Gitlab token and URL must be provided using the persistent flags --gitlabToken and --gitlabUrl")
 	}
 
-	client, err := client.NewClient(gitlabToken, client.WithBaseURL(gitlabUrl))
+	client, err := gitlab.NewClient(gitlabToken, gitlab.WithBaseURL(gitlabUrl))
 	if err != nil {
 		log.Fatalf("Failed to create GitLab client: %v", err)
 	}
 
-	result, res, err := gitlab.CreateGroup(client, groupName, groupDescription, visibility)
+	result, res, err := pkg.CreateGroup(client, groupName, groupDescription, visibility)
 	if err != nil {
 		if res != nil && res.StatusCode == http.StatusConflict {
 			fmt.Printf("Group '%s' is exists.\n", groupName)

@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	api "github.com/Cloud-for-You/devops-cli/apis/v1alpha1"
+	api "github.com/Cloud-for-You/devops-cli/api"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 

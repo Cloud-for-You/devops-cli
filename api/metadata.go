@@ -1,4 +1,4 @@
-package v1alpha1
+package api
 
 import "encoding/json"
 
@@ -9,7 +9,7 @@ type Metadata struct {
 	Name string `json:"name" yaml:"name"`
 }
 
-func ValidateData(data []byte, v any) bool {
+func ValidateConfigFile(data []byte, v any) bool {
 	err := json.Unmarshal(data, v)
 	return err == nil
 }
