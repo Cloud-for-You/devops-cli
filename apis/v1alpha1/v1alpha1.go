@@ -9,7 +9,7 @@ type Metadata struct {
 	Name string `json:"name" yaml:"name"`
 }
 
-func Validate(data []byte, v any) bool {
+func ValidateData(data []byte, v any) bool {
 	err := json.Unmarshal(data, v)
 	return err == nil
 }

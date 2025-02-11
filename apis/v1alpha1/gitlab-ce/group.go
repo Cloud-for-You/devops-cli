@@ -2,15 +2,12 @@ package v1alpha1
 
 import (
 	api "github.com/Cloud-for-You/devops-cli/apis/v1alpha1"
-
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
-type Group struct {
-	APIVersion string       `json:"apiVersion" yaml:"apiVersion"`
-	Kind       string       `json:"kind" yaml:"kind"`
+type GitLabGroup struct {
+	APIVersion string `json:"apiVersion" yaml:"apiVersion"`
+	Kind       string `json:"kind" yaml:"kind"`
 	Metadata   api.Metadata `json:"metadata" yaml:"metadata"`
-	Spec       GroupSpec    `json:"spec" yaml:"spec"`
+	Spec       gitlab.CreateGroupOptions `json:"spec" yaml:"spec"`
 }
-
-type GroupSpec gitlab.CreateGroupOptions
