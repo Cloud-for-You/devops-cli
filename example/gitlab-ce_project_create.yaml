@@ -1,8 +1,8 @@
 apiVersion: gitlab-ce.devops-cli.cfy.cz/v1alpha1
-kind: projekt
+kind: Project
 metadata:
-  name: test-project
+  name: fusion
 spec:
-  description: "Testovaci projekt vytvareny pomoci devops-cli a konfiguracniho souboru"
-  namespace_id: 100
-  visibility: public
+  description: "Kondor Fusion Risk - OpenShift deployment repository"
+  namespace_id: 480
+  visibility: private
